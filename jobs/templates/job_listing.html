@@ -64,9 +64,9 @@
                             <!-- Select job items start -->
                             <div class="select-job-items2">
                                 <select name="select" id="location">
-                                    <option value="">Select a category</option>
-                                    {% for category in categories %}
-                                        <option value="{{ category.name }}">{{ category.name }}</option>
+                                    <option value="">Select by location</option>
+                                    {% for locations in location %}
+                                        <option value="{{ locations }}">{{ locations }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -91,7 +91,7 @@
                                     <h4>Date Range</h4>
                                 </div>
                                 <form method="get" action="{% url 'job-list' %}">
-                                    <label for="date_range">Select Date Range:</label>
+                                   
                                     <select name="date_range" id="date_range">
                                         <option value="">All</option>
                                         <option value="0-1" {% if request.GET.date_range == "0-1" %}selected{% endif %}>0-1 days</option>

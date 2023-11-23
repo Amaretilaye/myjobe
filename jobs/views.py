@@ -29,6 +29,8 @@ class JobListView(ListView):
             filter_criteria &= Q(job_type=job_type)
         if category:
             filter_criteria &= Q(category__name=category)
+        if category:
+            filter_criteria &= Q(location__name=location)
 
         # Apply date range filter if provided
         if date_range == '0-1':
@@ -45,4 +47,5 @@ class JobListView(ListView):
         # Add the list of unique categories and job types to the context
         context['categories'] = Categories.objects.all()
         context['job_types'] = Job.JOB_TYPE_CHOICES
+        context['location'] = Job.LOCATION_CHOICES
         return context
