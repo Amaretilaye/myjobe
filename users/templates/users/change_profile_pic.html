@@ -1,0 +1,53 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+  <!-- ======= Header ======= -->
+  <!-- Your header content here -->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      {% if messages %}
+        <div class="alert alert-success">
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+               
+      {% if user.is_authenticated %}
+        {% if profilepic and user.id == profilepic.user.id %}
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button class="btn btn-primary">Update</button>
+          </form>
+        {% else %}
+          <p>You are not allowed</p>
+        {% endif %}
+      {% endif %}
+
+      {% for skill in form.skills %}
+      
+    {% endfor %}
+
+
+    </section>
+  </main><!-- End #main -->
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XYZ" crossorigin="anonymous" />
+
+</head>
+<body>
+  <!-- new login page-->
+  <div class="form-container" style="height: fit-content; margin: 2% auto;">
+    {% if messages %}
+      <div class="alert alert-success">
+        <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><p style="color: #ac0909;font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">{{ message }}</p></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    <p class="title">Welcome back/ <a href="{% url 'home' %}" style="font-size: 30px;">
+      <i class="fas fa-home"></i> Back to home
+    </a></p> 
+    <form class="form" method="POST">
+      {% csrf_token %}
+      <label for="id_username">Username</label>
+      <input type="text" name="username" class="input" placeholder="Email">
+      <label for="id_password">Username</label>
+      <input type="password" name="password" class="input" placeholder="Password">
+      <p class="page-link">
+        <span class="page-link-label">Forgot Password?</span>
+      </p>
+      <button class="form-btn">Log in</button>
+    </form>
+    <p class="sign-up-label">
+      Don't have an account?<a href="{%url 'register'%}"><span class="sign-up-link">Sign up</span></a>
+    </p>
+  </div>
+</body>
+</html>
+{% endblock %}

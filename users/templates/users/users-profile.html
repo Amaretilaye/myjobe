@@ -1,0 +1,192 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+  <!-- ======= Header ======= -->
+  <!-- Your header content here -->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    {% if user_profiles %}
+      <section class="section profile">
+        <div class="row">
+          <div class="col-xl-4">
+
+            <div class="card">
+              <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+
+              
+      
+                       
+              
+                        {% if user.profilepic.profile_pic %}
+                        <img src="{{ user.profilepic.profile_pic.url }}" alt=" Profile" class="rounded-circle">
+                        {% else %}
+                            <p>No profile picture </p>
+                        {% endif %}
+                        <!-- Other profile information -->
+                      
+                     
+                        {% if user.profilepic.profile_pic %}
+                        <h3><a href="{% url 'change_profile_pic' user.profilepic.id %}">Change profile Image</a></h3>
+                        {% else %}
+                        <h3><a href="{% url 'create_profile_pic' %}">upload profile</a></h3>
+                        {% endif %}
+                        {%if user.is_employee %}
+                        <h2>{{ user.get_full_name }}</h2>
+                <div class="social-links mt-2">
+                  <a href="{{ user.employeeprofile.web_site_url }}" class="twitter"><i class="bi bi-twitter"></i></a>
+                  <a href="{{ user.employeeprofile.facebook_url }}" class="facebook"><i class="bi bi-facebook"></i></a>
+                  <a href="{{ user.employeeprofile.instagram_url }}" class="instagram"><i class="bi bi-instagram"></i></a>
+                  <a href="{{ user.employeeprofile.telegram_url }}" class="Telegram"><i class="bi bi-telegram"></i></a>
+                  <a href="{{ user.employeeprofile.linkedin_url }}" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                </div>
+               {%endif%}
+               {%if user.is_employer%}
+               <div class="social-links mt-2">
+                 <a href="{{ user.employerprofile.web_site_url }}" class="twitter"><i class="bi bi-twitter"></i></a>
+                 <a href="{{ user.employerprofile.facebook_url }}" class="facebook"><i class="bi bi-facebook"></i></a>
+                 <a href="{{ user.employerprofile.instagram_url }}" class="instagram"><i class="bi bi-instagram"></i></a>
+                 <a href="{{ user.employerprofile.telegram_url }}" class="Telegram"><i class="bi bi-telegram"></i></a>
+                 <a href="{{ user.employerprofile.linkedin_url }}" class="linkedin"><i class="bi bi-linkedin"></i></a>
+               </div>
+              {%endif%}
+              </div>
+            </div>
+
+          </div>
+
+
+          {%if user.is_employee%}
+          <div class="col-xl-8">
+            <div class="card">
+              <div class="card-body pt-3">
+                <!-- Bordered Tabs -->
+                <ul class="nav nav-tabs nav-tabs-bordered">
+                  <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Profile</button>
+                  </li>
+                </ul>
+                <div class="tab-content pt-2">
+
+                  <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                    <h5 class="card-title">Bio</h5>
+                    <p class="small fst-italic">{{ user.employeeprofile.bio }}</p>
+                    
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Email</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employeeprofile.email }}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Skills</div>
+                      <div class="col-lg-9 col-md-8">
+                          {% if user.employeeprofile.skills.all %}
+                              {% for skill in user.employeeprofile.skills.all %}
+                                  {{ skill.name }}
+                              {% endfor %}
+                          {% else %}
+                              No skills selected
+                          {% endif %}
+                  
+                          {# If using a form, you can iterate through the form's skills field #}
+                          {% for skill in form.skills %}
+                              {{ skill.choice_label }}
+                          {% endfor %}
+                      </div>
+                  </div>
+                  
+                  
+                  
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Education</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employeeprofile.education }}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Experience</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employeeprofile.experience }}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Certifications</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employeeprofile.certifications }}</div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Languages</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employeeprofile.languages }}</div>
+                    </div>
+                  </div>
+                  <!-- start Profile Edit Form -->
+              
+                </div><!-- End Bordered Tabs -->
+              </div>
+            </div>
+          </div>
+          {%endif%}
+          {%if user.is_employer%}
+          <div class="col-xl-8">
+            <div class="card">
+              <div class="card-body pt-3">
+                <!-- Bordered Tabs -->
+                <ul class="nav nav-tabs nav-tabs-bordered">
+                  <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview"> company profileProfile</button>
+                  </li>
+                </ul>
+                <div class="tab-content pt-2">
+
+                  <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                    <h5 class="card-title">service </h5>
+                    <p class="small fst-italic">{{ user.employerprofile.services|safe}}</p>
+                    
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Email</div>
+                      <div class="col-lg-9 col-md-8">{{user.email}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">phone number</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employerprofile.phone_number}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">location</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employerprofile.location}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">about as</div>
+                      <div class="col-lg-9 col-md-8">
+                         {{ user.employerprofile.description }}
+                      </div>
+                  </div>
+              
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">indestry</div>
+                      <div class="col-lg-9 col-md-8">{{ user.employerprofile.industry}}</div>
+                    </div>
+                   
+                  <!-- start Profile Edit Form -->
+              
+                </div><!-- End Bordered Tabs -->
+              </div>
+            </div>
+          </div>
+          {%endif%}
+
+        </div>
+      </section>
+    {% else %}
+      <p>No user profiles available.</p>
+    {% endif %}
+  </main><!-- End #main -->
+
+{% endblock %}
