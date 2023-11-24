@@ -104,4 +104,15 @@ class Job(models.Model):
 
     def __str__(self):
         return str(self.title)
+class Applicant(models.Model):
+    user = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
+    cover_letter = models.TextField(blank=True, null=True)
+    applied_date = models.DateTimeField(auto_now_add=True)
+    is_shortlisted = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.job.title} Application"
     

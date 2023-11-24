@@ -39,6 +39,9 @@
                                 {% endfor %}
                                 </select>
                             </div>
+                            
+                            
+                            
                             <!--  Select job items End-->
                             <!-- select-Categories start -->
                             <div class="select-Categories pt-80 pb-50">
@@ -65,8 +68,8 @@
                             <div class="select-job-items2">
                                 <select name="select" id="location">
                                     <option value="">Select by location</option>
-                                    {% for locations in location %}
-                                        <option value="{{ locations }}">{{ locations }}</option>
+                                    {% for location in locations %}
+                                        <option value="{{ location }}">{{ location }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -91,16 +94,40 @@
                                     <h4>Date Range</h4>
                                 </div>
                                 <form method="get" action="{% url 'job-list' %}">
-                                   
-                                    <select name="date_range" id="date_range">
-                                        <option value="">All</option>
-                                        <option value="0-1" {% if request.GET.date_range == "0-1" %}selected{% endif %}>0-1 days</option>
-                                        <option value="1-2" {% if request.GET.date_range == "1-2" %}selected{% endif %}>1-2 days</option>
-                                        <option value="2-4" {% if request.GET.date_range == "2-4" %}selected{% endif %}>2-4 days</option>
-                                        <option value="4-6" {% if request.GET.date_range == "4-6" %}selected{% endif %}>4-6 days</option>
-                                        <option value="6-8" {% if request.GET.date_range == "6-8" %}selected{% endif %}>6-8 days</option>
-                                        <option value="8+" {% if request.GET.date_range == "8+" %}selected{% endif %}>8+ days</option>
-                                    </select>
+                                    <label>Select Date Range:</label>
+                                    <div>
+                                        <label class="container" for="all">
+                                        <input type="checkbox" name="date_range" id="all" value="" {% if not request.GET.date_range %}checked{% endif %}>
+                                        <span class="checkmark"></span>
+                                        All
+                                        </label>
+                                        <label class="container" for="0-1">
+                                        <input type="checkbox" name="date_range" id="0-1" value="0-1" {% if request.GET.date_range == "0-1" %}checked{% endif %}>
+                                        <span class="checkmark"></span> 
+                                        0-1 days
+                                        </label>
+                                        <label class="container" for="2-4">
+                                            <input type="checkbox" name="date_range" id="2-4" value="2-4" {% if request.GET.date_range == "2-4" %}checked{% endif %}>
+                                            <span class="checkmark"></span> 
+                                            2-4 days
+                                        </label>
+                                        <label class="container" for="4-6">
+                                            <input type="checkbox" name="date_range" id="4-6" value="4-6" {% if request.GET.date_range == "4-6" %}checked{% endif %}>
+                                            <span class="checkmark"></span> 
+                                            6-8 days
+                                        </label>
+                                        <label class="container" for="6-8">
+                                            <input type="checkbox" name="date_range" id="6-8" value="6-8" {% if request.GET.date_range == "6-8" %}checked{% endif %}>
+                                            <span class="checkmark"></span> 
+                                            6-8 days
+                                        </label>
+                                        <label class="container" for="8+">
+                                            <input type="checkbox" name="date_range" id="8+" value="8+" {% if request.GET.date_range == "8+" %}checked{% endif %}>
+                                            <span class="checkmark"></span> 
+                                            8+ days
+                                        </label>
+                           
+                                    </div>
                                     <button type="submit" class="btn head-btn1">Filter</button>
                                 </form>
                             </div>
@@ -160,33 +187,34 @@
                             <!-- Count of Job list End -->
                             <!-- single-job-content -->
                             {% for jobs in object_list %}
-                                <div class="{% if jobs.is_featured %}featured-jobs{% endif %}">
-                                    <div class="single-job-items mb-30">
-                                        <div class="job-items">
-                                            <div class="company-img">
-                                                {% if jobs.company_logo %}
-                                                    <a href="#"><img src="{{ jobs.company_logo.url }}" alt="" style="width: 60px; height: 60px;"></a>
-                                                {% else %}
-                                                    <p>upload Logo</p>
-                                                {% endif %}
-                                            </div>
-                                            <div class="job-tittle job-tittle2">
-                                                <a href="#">
-                                                    <h4>{{ jobs.title }}</h4>
-                                                </a>
-                                                <ul>
-                                                    <li>{{ jobs.company.industry }}</li>
-                                                    <li><i class="fas fa-map-marker-alt"></i>{{ jobs.location }}</li>
-                                                    <li>{{ jobs.salary }} Birr</li>
-                                                </ul>
-                                            </div>
+                            <div class="{% if job.is_featured %}featured-jobs{% endif %}">
+                                <div class="single-job-items mb-30">
+                                    <div class="job-items">
+                                        <div class="company-img">
+                                            {% if jobs.company_logo %}
+                                                <a href="{% url 'job_detail' pk=jobs.pk %}"><img src="{{ jobs.company_logo.url }}" alt="" style="width: 60px; height: 60px;"></a>
+                                            {% else %}
+                                                <p>upload Logo</p>
+                                            {% endif %}
                                         </div>
-                                        <div class="items-link items-link2 f-right">
-                                            <a href="job_details.html">{{ jobs.job_type }}</a>
-                                            <span>{{ jobs.posted_date }} ago</span>
+                                        <div class="job-tittle job-tittle2">
+                                            <a href="{% url 'job_detail' pk=jobs.pk %}">
+                                                <h4>{{ jobs.title }}</h4>
+                                            </a>
+                                            <ul>
+                                                <li>{{ jobs.company.industry }}</li>
+                                                <li><i class="fas fa-map-marker-alt"></i>{{ jobs.location }}</li>
+                                                <li>{{ jobs.salary }} Birr</li>
+                                            </ul>
                                         </div>
                                     </div>
+                                    <div class="items-link items-link2 f-right">
+                                        <a href="{% url 'job_detail' pk=jobs.pk %}">{{ jobs.job_type }}</a>
+                                        <span>{{ jobs.posted_date }} ago</span>
+                                    </div>
                                 </div>
+                            </div>
+                            
                             {% endfor %}
                         </div>
                     </section>
