@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import*
 from. import views
-from.views import CreatProfilePageView,EditProfilePageView,EmployeeProfileListView
+from.views import CreatProfilePageView,EditProfilePageView,EmployeeProfileListView,view_my_applicants
+from .views import my_applications,JobPostView
 
 urlpatterns = [
     path('', views.users, name='dashbord'),
@@ -29,6 +30,12 @@ urlpatterns = [
     #profile of employer 
     path('create-employer-profile/',CreatEmployerProfileView.as_view(), name='create_employer_profile'),
     path('<int:pk>/edit-employer-profile/', EditEmployerProfileView.as_view(), name='edit_employer_profile'),
+    path('my-applications/', my_applications, name='my_applications'),
+   
+    path('my_applicants/', views.view_my_applicants, name='my_applicants'),
+    path('post_job/', JobPostView.as_view(), name='post_job'),
+
+    #path('desired-success-url/', views.DesiredSuccessView.as_view(), name='desired_success_url_name'),
 
 
  

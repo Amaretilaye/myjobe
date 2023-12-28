@@ -83,7 +83,7 @@ class Job(models.Model):
         ('city1', 'City 1'),
         ('city2', 'City 2'),
         ('city3', 'City 3'),
-        # Add more cities as needed
+        # Add more cities as neededs
     ]
 
     company = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)
@@ -112,7 +112,19 @@ class Applicant(models.Model):
     applied_date = models.DateTimeField(auto_now_add=True)
     is_shortlisted = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
-
+    #STATUS_CHOICES = [
+        #('applied', 'Applied'),
+       # ('shortlisted', 'Shortlisted'),
+       # ('rejected', 'Rejected'),
+    #]
+    #status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='applied')
     def __str__(self):
         return f"{self.user.username} - {self.job.title} Application"
     
+# No changes needed here
+class My_applicant(models.Model):
+    job = models.ForeignKey(Job, related_name='applicants', on_delete=models.CASCADE)
+    # Add other fields related to the applicant like name, resume, etc.
+    
+    def __str__(self):
+        return f"{self.job.title} - {self.id}"

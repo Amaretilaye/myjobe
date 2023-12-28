@@ -1,0 +1,34 @@
+
+<!-- templates/my_applications.html -->
+{% extends "users/base.html"%}
+{% load static%}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+<h1>My Applicants</h1>
+
+    {% for job, applicants in applicants_by_job.items %}
+        <h2>{{ job.title }}</h2>
+        <ul>
+        {% for applicant in applicants %}
+            <li>{{ applicant.id }} - {{ applicant.name }} (Or any other fields you wish to display)</li>
+        {% empty %}
+            <li>No applicants for this job yet.</li>
+        {% endfor %}
+        </ul>
+    {% empty %}
+        <p>No jobs posted by you yet.</p>
+    {% endfor %}
+</main>
+{% endblock%}

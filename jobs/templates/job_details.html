@@ -102,12 +102,13 @@
                           </ul>
 
                           <div class="apply-btn2">
-                            {% if jobs.application_deadline <= now %}
+                            {% if jobs.application_deadline <= now and user.is_employer %}
                                 <a href="#" class="btn disabled">This job is not available for now</a>
                             {% else %}
-                                <a href="#" class="btn">Apply Now</a>
+                                <a href="{% url 'apply_for_job' job.id %}" class="btn">Apply Now</a>
                             {% endif %}
-                          </div> 
+                        </div>
+                        
                        </div>
                         <div class="post-details4  mb-50">
                             <!-- Small Section Tittle -->

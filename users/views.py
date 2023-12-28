@@ -11,16 +11,18 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.views.generic import CreateView
 from .forms import EmployerSignUpForm, EmployeeSignUpForm,EditProfileForm,ProfilePageForm,PasswordChangingForm,EditProfilePicForm, CreatProfilePicForm
-from .forms import EmployerProfileForm,EditEmployerProfileForm
+from .forms import EmployerProfileForm,EditEmployerProfileForm,JobPostForm
 from django.contrib.auth.forms import AuthenticationForm 
 from .models import User,Employer,Employee
-from jobs.models import EmployeeProfile,ProfilePic,EmployerProfile
+from jobs.models import EmployeeProfile,ProfilePic,EmployerProfile,Applicant,Job,My_applicant
+from jobs.models import*
 from .models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.views.generic.edit import FormView
 from django.shortcuts import render, redirect
 
 def register(request):
@@ -178,4 +180,47 @@ class PasswordsChangeView(PasswordChangeView):
     def get_success_url(self):
         # Redirect to the same page after a successful password change
         return reverse_lazy('password-change')
+
+def my_applications(request):
+    # Retrieve applications for the logged-in user
+    applications = Applicant.objects.filter(user=request.user.employee)
+    return render(request, 'users/my_applications.html', {'applications': applications})
+
+def view_my_applicants(request):
+    # Fetch jobs posted by the logged-in employer
+    jobs = Job.objects.filter(company=request.user.employerprofile)  # Assuming you have a relationship between User and EmployerProfile
+    applicants_by_job = {}
+    for job in jobs:
+        applicants_by_job[job] = job.my_applicants.all()
+
+    return render(request, 'users/my_applicants.html', {'applicants_by_job': applicants_by_job})
+
+class JobPostView(FormView):
+    model= Job
+    template_name = 'users/job_post_form.html'
+    form_class = JobPostForm
+   
+
+    def form_valid(self, form):
+        job_post = form.save(commit=False)
+        job_post.company = self.request.user.employerprofile
+        job_post.save()
+
+        # Display success message
+        messages.success(self.request, 'Successfully posted your job!')
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # You can add additional context data if needed
+        return context
+    def get_success_url(self):
+        # Use reverse_lazy to dynamically generate the URL based on the current view
+        return reverse_lazy('post_job')
+
+    def form_valid(self, form):
+        # Add a success message
+        messages.success(self.request, ' job posted seccesfuly!')
+        return super().form_valid(form)
  
