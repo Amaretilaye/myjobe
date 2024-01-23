@@ -1,0 +1,107 @@
+
+<!-- templates/my_applications.html -->
+{% extends "users/base.html"%}
+{% load static%}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Applicants List</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Filter 
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'rejected_applicants'%}" style="color: rgb(185, 9, 9);">Rejected</a></li>
+          <li><a class="dropdown-item" href="{% url 'shortlisted_applicants'%}" style="color: rgb(10, 177, 4);">Short listed</a></li>
+          <li><a class="dropdown-item" href="{% url 'my_applicants'%}" style="color: rgb(199, 196, 13);">Applicant</a></li>
+        </ul>
+      </div>
+
+    
+
+   
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <th>applicants </th>
+            <th>Job Title</th>
+            <th>Resume</th>
+            <th>Cover Letter</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for applicant in applicants %}
+        <tr>
+            <td>{{applicant.id}}</td>
+            <td>{{ applicant.user.first_name }} {{ applicant.user.last_name }}</td>
+            <td>{{ applicant.job.title }}</td>
+            <td><a href="{{ applicant.resume.url }}" target="_blank">View Resume</a></td>
+            <td>{{ applicant.cover_letter }}</td>
+            <td>{{ applicant.applied_date }}</td>
+            <td>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% csrf_token %}
+
+<!-- Status Dropdown -->
+<select name="status" id="statusSelect_{{ applicant.id }}">
+    <option value="applied" {% if applicant.status == 'applied' %}selected{% endif %} style="color: green;">Applied</option>
+    <option value="shortlisted" {% if applicant.status == 'shortlisted' %}selected{% endif %} style="color: rgb(211, 214, 7);">Shortlisted</option>
+    <option value="rejected" {% if applicant.status == 'rejected' %}selected{% endif %} style="color: rgb(128, 0, 0);">Rejected</option>
+</select>
+
+<!-- Hidden field for CSRF Token -->
+<input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+<script>
+    $(document).ready(function() {
+        // Update color of dropdown based on selected option
+        $("#statusSelect_{{ applicant.id }}").on("change", function() {
+            var selectedOption = $(this).val();
+            var selectedColor = $(this).find("option:selected").css("color");
+            
+            $(this).css("color", selectedColor);
+            
+            // Fetch CSRF token from hidden input
+            var csrfToken = $("#csrf_token").val();
+            
+            $.ajax({
+                url: "{% url 'update_status' applicant.id %}",
+                type: "POST",
+                data: {
+                    'status': selectedOption,
+                    'auto_submit': 1,
+                    'csrfmiddlewaretoken': csrfToken
+                },
+              
+                error: function(error) {
+                    // Handle any errors here
+                    console.error('Error:', error);
+                }
+            });
+        }).trigger("change");  // Trigger change event initially to set color based on default selection
+    });
+</script>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No applicants found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</main>
+{% endblock%}

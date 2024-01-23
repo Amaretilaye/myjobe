@@ -57,7 +57,7 @@
                                 <div class="main-menu">
                                     <nav class="d-none d-lg-block">
                                         <ul id="navigation">
-                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="http://127.0.0.1:8000">Home</a></li>
                                             <li><a href="{% url 'job-list'%}">Find a Jobs </a></li>
                                             <li><a href="about.html">About</a></li>
                                             <li><a href="#">Page</a>
@@ -76,9 +76,13 @@
                                 <!-- Header-btn -->
                                 <div class="header-btn d-none f-right d-lg-block">
                                  
-                                    {% if user.is_authenticated %}
+                                    {% if user.is_authenticated %} 
+                                       {% if user.is_employee %}
                                    
-                                        <a href="{% url 'dashbord'%}" class="btn head-btn1">dashboard</a>
+                                        <a href="{% url 'employee'%}" class="btn head-btn1">dashboard</a>
+                                        {%else%}
+                                        <a href="{% url 'employer'%}" class="btn head-btn1">dashboard</a>
+                                        {%endif%}
                                         <a href="{% url 'logout' %}" class="btn head-btn2">logout</a>
                                     {% else %}
                                         <a href="{% url 'register' %}" class="btn head-btn1">Register</a>
@@ -105,7 +109,7 @@
         <div class="slider-area ">
             <!-- Mobile Menu -->
             <div class="slider-active">
-                <div class="single-slider slider-height d-flex align-items-center" data-background="{% static 'assets/img/hero/h1_hero.jpg'%}">
+                <div class="single-slider slider-height d-flex align-items-center" data-background="{% static 'assets/img/hero/h2_hero.jpg'%}">
                     <div class="container">
                         <div class="row">
                             <div class="col-xl-6 col-lg-9 col-md-10">
@@ -117,25 +121,13 @@
                         <!-- Search Box -->
                         <div class="row">
                             <div class="col-xl-8">
-                                <!-- form -->
-                                <form action="#" class="search-box">
+                                <!-- form -->                       	
+                                <form method="GET" action="{% url 'search_results' %}"class="search-box">
                                     <div class="input-form">
-                                        <input type="text" placeholder="Job Tittle or keyword">
-                                    </div>
-                                    <div class="select-form">
-                                        <div class="select-itms">
-                                            <select name="select" id="select1">
-                                                <option value="">Location BD</option>
-                                                <option value="">Location PK</option>
-                                                <option value="">Location US</option>
-                                                <option value="">Location UK</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="search-form">
-                                        <a href="#">Find job</a>
+                                    <input type="text" name="search" placeholder="Search for jobs...">
                                     </div>	
-                                </form>	
+                                    <button type="submit" class="btn post-btn">Search</button>
+                                </form>
                             </div>
                         </div>
                     </div>

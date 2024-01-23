@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'jobs',
     'users',
+    'wkhtmltopdf',
 ]
+WKHTMLTOPDF_CMD = 'C:\my project\myjobe\myvenv\Lib\site-packages\wkhtmltopdf'
+
 AUTH_USER_MODEL='users.User'
 LOGIN_URL = '/users/login/' 
 PASSWORD_CHANGE_REDIRECT = '/users/password/' 

@@ -16,7 +16,7 @@ class Categories(models.Model):
         return reverse('index')
 
     def get_post_count(self):
-        return self.posts.count()
+        return self.jobs.count()
 
 class EmployeeProfile(models.Model):
     user = models.OneToOneField(get_user_model(), null=True, on_delete=models.CASCADE)
@@ -42,6 +42,7 @@ class EmployeeProfile(models.Model):
 
     def get_absolute_url(self):
         return reverse('home')
+
     
 class EmployerProfile(models.Model):
     user = models.OneToOneField(get_user_model(), null=True, on_delete=models.CASCADE)
@@ -89,7 +90,7 @@ class Job(models.Model):
     company = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)
     company_logo = models.ImageField(upload_to='images/profile/', blank=True, null=True)
     title = models.CharField(max_length=100)
-    category = models.ManyToManyField(Categories)
+    catagory = models.ForeignKey(Categories, related_name='jobs', on_delete=models.CASCADE)
     description = models.TextField()
     location = models.CharField(max_length=100, choices=LOCATION_CHOICES, blank=True, null=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -101,9 +102,15 @@ class Job(models.Model):
     job_type = models.CharField(max_length=20, choices=JOB_TYPE_CHOICES, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     experience = models.CharField(max_length=100, blank=True, null=True)
+    
 
     def __str__(self):
         return str(self.title)
+
+    @classmethod
+    def get_total_count(cls):
+        return cls.objects.all().count()
+        
 class Applicant(models.Model):
     user = models.ForeignKey(Employee, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
@@ -112,19 +119,17 @@ class Applicant(models.Model):
     applied_date = models.DateTimeField(auto_now_add=True)
     is_shortlisted = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
-    #STATUS_CHOICES = [
-        #('applied', 'Applied'),
-       # ('shortlisted', 'Shortlisted'),
-       # ('rejected', 'Rejected'),
-    #]
-    #status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='applied')
+    STATUS_CHOICES = [
+        ('applied', 'Applied'),
+       ('shortlisted', 'Shortlisted'),
+       ('rejected', 'Rejected'),
+    ]
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='applied')
     def __str__(self):
         return f"{self.user.username} - {self.job.title} Application"
+    @classmethod
+    def get_total_count(cls):
+        return cls.objects.all().count()
     
 # No changes needed here
-class My_applicant(models.Model):
-    job = models.ForeignKey(Job, related_name='applicants', on_delete=models.CASCADE)
-    # Add other fields related to the applicant like name, resume, etc.
-    
-    def __str__(self):
-        return f"{self.job.title} - {self.id}"
+

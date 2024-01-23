@@ -11,10 +11,10 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.views.generic import CreateView
 from .forms import EmployerSignUpForm, EmployeeSignUpForm,EditProfileForm,ProfilePageForm,PasswordChangingForm,EditProfilePicForm, CreatProfilePicForm
-from .forms import EmployerProfileForm,EditEmployerProfileForm,JobPostForm
+from .forms import EmployerProfileForm,EditEmployerProfileForm
 from django.contrib.auth.forms import AuthenticationForm 
 from .models import User,Employer,Employee
-from jobs.models import EmployeeProfile,ProfilePic,EmployerProfile,Applicant,Job,My_applicant
+from jobs.models import EmployeeProfile,ProfilePic,EmployerProfile,Applicant,Job
 from jobs.models import*
 from .models import User
 from django.contrib.auth.decorators import login_required
@@ -24,6 +24,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def register(request):
     return render(request, 'users/register.html')
@@ -82,10 +83,23 @@ def users_admin(request):
     return render(request, 'users/admin_dashbord.html')
 def users_employee(request):
     return render(request, 'users/employee_dashbord.html')
-def users_employer(request):
-    return render(request, 'users/employer_dashbord.html')
-def users(request):
-    return render(request, 'users/index.html')
+
+
+
+class MyDashbordView(ListView):
+    model = Job
+    template_name = 'users/employer_dashbord.html'
+    context_object_name = 'joblist'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        logged_in_employer = self.request.user.employerprofile 
+               
+        context['employer_job_count'] = Job.objects.filter(company=logged_in_employer).count()
+        return context
+
+
 def user_profile(request):
     return render(request, 'users/users-profile.html')
 
@@ -99,7 +113,7 @@ class CreatProfilePageView(CreateView):
     def form_valid(self,form):
         form.instance.user = self.request.user
         return super(). form_valid(form)
-class CreatEmployerProfileView(CreateView):
+class CreatEmployerProfileView(LoginRequiredMixin, CreateView):
     
     model=EmployerProfile
     form_class=EmployerProfileForm
@@ -139,7 +153,7 @@ class EditProfilePageView(UpdateView):
 
         return super().form_valid(form)
     
-class CreatProfilepicView(CreateView):
+class CreatProfilepicView(LoginRequiredMixin,CreateView):
     
     model=ProfilePic
     form_class= CreatProfilePicForm
@@ -186,41 +200,5 @@ def my_applications(request):
     applications = Applicant.objects.filter(user=request.user.employee)
     return render(request, 'users/my_applications.html', {'applications': applications})
 
-def view_my_applicants(request):
-    # Fetch jobs posted by the logged-in employer
-    jobs = Job.objects.filter(company=request.user.employerprofile)  # Assuming you have a relationship between User and EmployerProfile
-    applicants_by_job = {}
-    for job in jobs:
-        applicants_by_job[job] = job.my_applicants.all()
 
-    return render(request, 'users/my_applicants.html', {'applicants_by_job': applicants_by_job})
 
-class JobPostView(FormView):
-    model= Job
-    template_name = 'users/job_post_form.html'
-    form_class = JobPostForm
-   
-
-    def form_valid(self, form):
-        job_post = form.save(commit=False)
-        job_post.company = self.request.user.employerprofile
-        job_post.save()
-
-        # Display success message
-        messages.success(self.request, 'Successfully posted your job!')
-
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # You can add additional context data if needed
-        return context
-    def get_success_url(self):
-        # Use reverse_lazy to dynamically generate the URL based on the current view
-        return reverse_lazy('post_job')
-
-    def form_valid(self, form):
-        # Add a success message
-        messages.success(self.request, ' job posted seccesfuly!')
-        return super().form_valid(form)
- 

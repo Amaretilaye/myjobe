@@ -1,14 +1,14 @@
 from django.urls import path
 from .views import*
 from. import views
-from.views import CreatProfilePageView,EditProfilePageView,EmployeeProfileListView,view_my_applicants
-from .views import my_applications,JobPostView
+from.views import CreatProfilePageView,EditProfilePageView,EmployeeProfileListView
+from .views import my_applications,MyDashbordView
 
 urlpatterns = [
-    path('', views.users, name='dashbord'),
+    #path('', views.users, name='dashbord'),
     path('w_admin/', views.users_admin, name='w-admin'),
     path('employee/', views.users_employee, name='employee'),
-    path('employer/', views.users_employer, name='employer'),
+    path('employer/', MyDashbordView.as_view(), name='employer'),
     path('user-profile/', views.user_profile, name='user_profile'),
 
     
@@ -31,9 +31,12 @@ urlpatterns = [
     path('create-employer-profile/',CreatEmployerProfileView.as_view(), name='create_employer_profile'),
     path('<int:pk>/edit-employer-profile/', EditEmployerProfileView.as_view(), name='edit_employer_profile'),
     path('my-applications/', my_applications, name='my_applications'),
+    
+]
+    
    
-    path('my_applicants/', views.view_my_applicants, name='my_applicants'),
-    path('post_job/', JobPostView.as_view(), name='post_job'),
+    
+    
 
     #path('desired-success-url/', views.DesiredSuccessView.as_view(), name='desired_success_url_name'),
 
@@ -43,7 +46,7 @@ urlpatterns = [
     
 
 
-]
+
 
     
 

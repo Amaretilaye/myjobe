@@ -51,7 +51,7 @@
                       <i class="bi bi-book"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>(145)jobs</h6>
+                      <a href="{%url 'my_job_list'%}"><h6>{{employer_job_count}}</h6></a>
 
                     </div>
                   </div>
@@ -115,7 +115,7 @@
 
                     </div>
                     <div class="ps-3">
-                      <h6>(4)employee</h6>
+                      <h6>{{applicant_job_count}}</h6>
                     </div>
                   </div>
 
@@ -208,7 +208,7 @@
                     <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
                 </div>
-
+                
                 <div class="card-body pb-0">
                   <h5 class="card-title">list<span> in this weeks</span></h5>
 

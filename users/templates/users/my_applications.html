@@ -14,11 +14,14 @@
         </ol>
       </nav>
     </div><!-- End Page Title -->
+ 
 <h1>My Applications</h1>
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Job Title</th>
+                    <th>Deadline</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -26,7 +29,10 @@
             <tbody>
                 {% for application in applications %}
                 <tr>
+                    
+                    <td>{{application.id}}</td>
                     <td>{{ application.job.title }}</td>
+                    <td>{{application.job.application_deadline}}</td>
                     <td>{{ application.get_status_display }}</td>
                     <td><a href="{% url 'job_detail' pk=application.job.pk %}">View Job Details</a></td>
                 </tr>

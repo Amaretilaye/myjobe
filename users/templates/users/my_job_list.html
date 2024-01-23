@@ -1,0 +1,62 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id="main" class="main">
+
+    <!-- ... (Your existing code for page title and other parts) ... -->
+
+    <h2>Your Posted Jobs</h2>
+    <div class="employer-job-count" style="background-color: brown; color: aliceblue;">
+        Total jobs: {{ employer_job_count }}
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> Id </th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Posted Date</th>
+                <th>Applicants</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in joblist %}
+            <tr>
+                <th>{{ job.id }}</th>
+                <td>{{ job.title }}</td>
+                <td>{{ job.catagory }}</td>
+                <td>{{ job.location }}</td>
+                <td>{{ job.posted_date }}</td>
+                <td> 
+                    <a href="{% url 'applicant-detail' job.id %}" style="background-color: rgb(95, 2, 2); border-radius: 27% 27% 27% 27%; color: aliceblue;"><i class="bi bi-person"></i>{{ job.num_applicants }}</a></td> <!-- Displaying number of applicants -->
+                <td>
+                    
+                    <div class="dropdown-center">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Manage
+                        </button>
+                        <ul class="dropdown-menu" >
+                            <li ><a class="dropdown-item" href="{% url 'job-delete' job.id %}">
+                                <i class="bi bi-trash" style="color: rgb(177, 4, 4);">Delete</i>
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'edit_job' job.id %}" style="color: rgb(10, 177, 4);">
+                                <i class="bi bi-pencil">Edit</i>
+                            </a></li>
+                        </ul>
+                    </div>
+                    
+                
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No jobs posted yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}

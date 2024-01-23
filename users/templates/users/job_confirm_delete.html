@@ -1,0 +1,30 @@
+
+<!-- templates/my_applications.html -->
+{% extends "users/base.html"%}
+{% load static%}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <h2>Delete Job</h2>
+    <div style="box-shadow: 0px 0px 10px rgba(122, 51, 51, 0.5); background-color: black; padding: 10px; margin-bottom: 10px; border-radius: 27px ;">
+      <p style="color: white;">Are you sure you want to delete "{{ job.title }}"?</p>
+  </div>
+  
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-danger" type="submit">Confirm</button>
+      <a class="btn btn-primary" href="{% url 'my_job_list' %}">Cancel</a>
+    </form>
+</main>
+
+    {% endblock %}
